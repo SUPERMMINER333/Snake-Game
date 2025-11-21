@@ -11,8 +11,6 @@ namespace Snake_Game
         public static string? direction { get; set; }
         public static int Speed { get; set; }
         public static int Score { get; set; }
-        public static int Level { get; set; }
-        public static string? Difficulty { get; set; }
 
         public Setting()
         {
