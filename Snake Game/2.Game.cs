@@ -21,9 +21,8 @@ namespace Snake_Game
         int score;
         int highScore;
 
-        int count = 0;
 
-        int playerName;
+        string currentPlayerName;
 
         Random rand = new Random();
 
@@ -281,7 +280,7 @@ namespace Snake_Game
             RefreshButton.Enabled = true;
             RefreshButton.Visible = true;
 
-            DataBaseUpload(PlayerNameTextBox.Text);
+            DataBaseUpload(currentPlayerName);
         }
 
         private void StopGame(object sender, EventArgs e)
@@ -304,22 +303,21 @@ namespace Snake_Game
             txtHighScore.ForeColor = Color.Black;
         }
 
-        public void DataBaseUpload(string playerName)
+        public void DataBaseUpload(string currentPlayerName)
         {
 
             try
             {
                 using var db = new Models.SnakeGameContext();
 
-                var newName = new Models.SnakeGame
+                var newSubmit = new Models.SnakeGame
                 {
-                    PlayerName = playerName,
+                    PlayerName = currentPlayerName,
                     Score = score,
-                    Level = Setting.Level,
                     Speed = Setting.Speed
                 };
 
-                db.SnakeGames.Add(newName);
+                db.SnakeGames.Add(newSubmit);
                 db.SaveChanges();
 
                 MessageBox.Show("Your score has been submitted successfully!", "Submission Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -336,9 +334,15 @@ namespace Snake_Game
 
                 txtHighScore.ForeColor = Color.Black;
             }
-            catch
+            catch (Exception ex)
             {
                 MessageBox.Show("An error occurred while submitting your score. Please try again later.", "Submission Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    $"ERROR:\n{ex.Message}\n\nINNER:\n{ex.InnerException?.Message}\n\nSTACKTRACE:\n{ex.StackTrace}",
+                    "Submission Failed",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
             }
         }
 
@@ -357,6 +361,8 @@ namespace Snake_Game
                     MessageBox.Show("Player name is too long. Please enter a name with 20 characters or fewer.", "Name Too Long", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
+                currentPlayerName = playerName;
                 
                 PlayerNameTextBox.Enabled = false;
                 RestartGame();

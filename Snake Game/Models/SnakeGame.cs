@@ -9,11 +9,7 @@ public partial class SnakeGame
 
     public string? PlayerName { get; set; }
 
-    public int? Score { get; set; }
-
-    public int? Level { get; set; }
-
-    public string? Difficulty { get; set; }
-
     public int? Speed { get; set; }
+
+    public int? Score { get; set; }
 }

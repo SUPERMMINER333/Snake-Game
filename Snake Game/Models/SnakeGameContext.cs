@@ -19,8 +19,8 @@ public partial class SnakeGameContext : DbContext
     public virtual DbSet<SnakeGame> SnakeGames { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;database=snake_game;uid=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=localhost;database=snake_game;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,8 +37,6 @@ public partial class SnakeGameContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
-            entity.Property(e => e.Difficulty).HasMaxLength(20);
-            entity.Property(e => e.Level).HasColumnType("int(11)");
             entity.Property(e => e.PlayerName).HasMaxLength(50);
             entity.Property(e => e.Score).HasColumnType("int(11)");
             entity.Property(e => e.Speed).HasColumnType("int(11)");

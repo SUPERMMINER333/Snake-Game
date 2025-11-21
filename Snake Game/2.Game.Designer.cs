@@ -37,7 +37,6 @@
             RefreshButton = new Button();
             PlayerNameTextBox = new TextBox();
             PlayerNameText = new Label();
-            SpeedText = new Label();
             ((System.ComponentModel.ISupportInitialize)picCanvas).BeginInit();
             SuspendLayout();
             // 
@@ -128,22 +127,11 @@
             PlayerNameText.TabIndex = 5;
             PlayerNameText.Text = "Player Name:";
             // 
-            // SpeedText
-            // 
-            SpeedText.AutoSize = true;
-            SpeedText.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            SpeedText.Location = new Point(204, 9);
-            SpeedText.Name = "SpeedText";
-            SpeedText.Size = new Size(105, 38);
-            SpeedText.TabIndex = 6;
-            SpeedText.Text = "Speed:";
-            // 
             // Game
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 753);
-            Controls.Add(SpeedText);
             Controls.Add(PlayerNameText);
             Controls.Add(PlayerNameTextBox);
             Controls.Add(RefreshButton);
@@ -170,6 +158,5 @@
         private Button RefreshButton;
         private TextBox PlayerNameTextBox;
         private Label PlayerNameText;
-        private Label SpeedText;
     }
 }
