@@ -433,7 +433,6 @@ namespace Snake_Game
                 highScore = 0;
 
                 txtHighScore.Text = "High Score: -";
-                MessageBox.Show("-*");
             }
 
         }
