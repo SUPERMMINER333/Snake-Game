@@ -273,6 +273,17 @@ namespace Snake_Game
         private void EatFood()
         {
             score += 1;
+            if (Setting.Speed > 10)
+            {
+                Setting.Speed -= 5;
+            }
+            else
+            {
+                if (Setting.Speed > 1)
+                {
+                    Setting.Speed -= 1;
+                }
+            }
 
             txtScore.Text = "Score: " + score;
 
@@ -285,6 +296,8 @@ namespace Snake_Game
             Snake.Add(body);
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+
+            gameTime.Interval = Setting.Speed;
         }
 
         private void Die()
@@ -302,6 +315,8 @@ namespace Snake_Game
             goUp = false;
             goLeft = false;
             goRight = false;
+
+            Setting.Speed = 100;
         }
 
         private void StopGame(object sender, EventArgs e)
