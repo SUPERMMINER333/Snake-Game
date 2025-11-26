@@ -7,24 +7,17 @@ namespace Snake_Game
         public MainMenu()
         {
             InitializeComponent();
+
+            using var db = new Models.SnakeGameContext();
+            if (!db.Database.CanConnect())
+            {
+                MessageBox.Show("No connection to the database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (SnakeGameContext snakeGameContext = new SnakeGameContext())
-                {
-                    snakeGameContext.Database.CanConnect();
-                    StartButton.Enabled = false;
-                    StopButton.Enabled = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Database connection error: " + ex.Message);
-            }
-
             Game Game = new Game();
             Game.Show();
             this.Hide();

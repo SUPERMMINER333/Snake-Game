@@ -33,6 +33,7 @@
             colRank = new ColumnHeader();
             colName = new ColumnHeader();
             colScore = new ColumnHeader();
+            StopButton = new Button();
             SuspendLayout();
             // 
             // TitelLabel
@@ -75,11 +76,25 @@
             colScore.TextAlign = HorizontalAlignment.Right;
             colScore.Width = 120;
             // 
+            // StopButton
+            // 
+            StopButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            StopButton.BackColor = Color.Red;
+            StopButton.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StopButton.Location = new Point(620, 681);
+            StopButton.Name = "StopButton";
+            StopButton.Size = new Size(150, 60);
+            StopButton.TabIndex = 2;
+            StopButton.Text = "Exit";
+            StopButton.UseVisualStyleBackColor = false;
+            StopButton.Click += StopButton_Click;
+            // 
             // RankingList
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 753);
+            Controls.Add(StopButton);
             Controls.Add(ListViewRanking);
             Controls.Add(TitelLabel);
             Name = "RankingList";
@@ -95,5 +110,6 @@
         private ColumnHeader colRank;
         private ColumnHeader colName;
         private ColumnHeader colScore;
+        private Button StopButton;
     }
 }
