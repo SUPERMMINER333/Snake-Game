@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Game));
             picCanvas = new PictureBox();
             txtScore = new Label();
             txtHighScore = new Label();
@@ -139,6 +140,7 @@
             Controls.Add(txtHighScore);
             Controls.Add(txtScore);
             Controls.Add(picCanvas);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Game";
             Text = "Snake Game";
             KeyDown += KeyIsDown;

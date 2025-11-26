@@ -90,7 +90,7 @@ namespace Snake_Game
         {
             MainMenu mainMenu = new MainMenu();
             mainMenu.Show();
-            this.Hide();
+            this.Close();
         }
     }
 }
