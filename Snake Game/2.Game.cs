@@ -195,8 +195,7 @@ namespace Snake_Game
 
                     if (kill != null && Snake[i].X == kill.X && Snake[i].Y == kill.Y)
                     {
-                        Die();
-                        kill = null;
+                        SpawnKillPowerup();
                     }
 
 
@@ -412,6 +411,8 @@ namespace Snake_Game
             }
 
             picCanvas.Invalidate();
+
+            Die();
         }
 
 
