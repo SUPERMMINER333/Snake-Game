@@ -72,7 +72,7 @@
             // 
             // colScore
             // 
-            colScore.Text = "Score";
+            colScore.Text = "Highscore";
             colScore.TextAlign = HorizontalAlignment.Right;
             colScore.Width = 120;
             // 
