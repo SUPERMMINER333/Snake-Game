@@ -329,15 +329,24 @@ namespace Snake_Game
             try
             {
                 using var db = new Models.SnakeGameContext();
+                var PlayerExists = db.SnakeGames.FirstOrDefault(x => x.PlayerName == currentPlayerName);
 
-                var newSubmit = new Models.SnakeGame
+                if (PlayerExists != null)
                 {
-                    PlayerName = currentPlayerName,
-                    Score = score,
-                    Speed = Setting.Speed
-                };
+                    PlayerExists.Score = score;
+                    PlayerExists.Speed = Setting.Speed;
+                }
+                else
+                {
+                    var Submit = new Models.SnakeGame
+                    {
+                        PlayerName = currentPlayerName,
+                        Score = score,
+                        Speed = Setting.Speed
+                    };
+                    db.SnakeGames.Add(Submit);
+                }
 
-                db.SnakeGames.Add(newSubmit);
                 db.SaveChanges();
 
                 //UI
