@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Snake_Game
 {
@@ -18,7 +19,7 @@ namespace Snake_Game
         }
 
         // Load ranking data from the database
-        private void LoadRankingList()
+        private async Task LoadRankingList()
         {
             ListViewRanking.Items.Clear();
             
@@ -32,11 +33,10 @@ namespace Snake_Game
                     return;
                 }
 
-                // Retrieve top 100 scores ordered by score descending
-                var rankings = db.SnakeGames
-                                 .OrderByDescending(s => s.Score)
-                                 .Take(100)
-                                 .ToList();
+            // Retrieve top 100 scores ordered by score descending
+            var rankings = await db.SnakeGames
+                             .OrderByDescending(s => s.Score)
+                             .ToListAsync();
 
                 // Initialize rank counter
                 int rank = 1;
