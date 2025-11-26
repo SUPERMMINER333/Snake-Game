@@ -88,7 +88,6 @@ namespace Snake_Game
 
         private void GameTimer(object sender, EventArgs e)
         {
-            // setting the directions
 
             if (goLeft)
             {
@@ -106,7 +105,6 @@ namespace Snake_Game
             {
                 Setting.direction = "up";
             }
-            // end of directions
 
             for (int i = Snake.Count - 1; i >= 0; i--)
             {
@@ -233,7 +231,7 @@ namespace Snake_Game
             txtScore.Text = "Score: " + score;
 
             Circle head = new Circle { X = 10, Y = 5 };
-            Snake.Add(head); // adding the head part of the snake to the list
+            Snake.Add(head);
 
             for (int i = 0; i < 10; i++)
             {
