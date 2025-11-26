@@ -187,10 +187,11 @@ namespace Snake_Game
                     }
 
                     //Eat powerup
-                    if (Snake[i].X == powerup.X && Snake[i].Y == powerup.Y)
+                    if (powerup != null && Snake[i].X == powerup.X && Snake[i].Y == powerup.Y)
                     {
                         EatPowerup();
                     }
+
 
                     for (int j = 1; j < Snake.Count; j++)
                     {
@@ -246,13 +247,17 @@ namespace Snake_Game
             Setting.Width, Setting.Height
             ));
 
-            //Draw powerup
-            canvas.FillEllipse(Brushes.Gold, new Rectangle
-            (
-            powerup.X * Setting.Width,
-            powerup.Y * Setting.Height,
-            Setting.Width, Setting.Height
-            ));
+            // Draw powerup, nur wenn es existiert
+            if (powerup != null)
+            {
+                canvas.FillEllipse(Brushes.Gold, new Rectangle
+                (
+                    powerup.X * Setting.Width,
+                    powerup.Y * Setting.Height,
+                    Setting.Width, Setting.Height
+                ));
+            }
+
         }
 
         private void RestartGame()
@@ -297,50 +302,107 @@ namespace Snake_Game
         {
             score += 1;
             if (Setting.Speed > 10)
-            {
                 Setting.Speed -= 5;
-            }
-            else
-            {
-                if (Setting.Speed > 1)
-                {
-                    Setting.Speed -= 1;
-                }
-            }
+            else if (Setting.Speed > 1)
+                Setting.Speed -= 1;
 
             txtScore.Text = "Score: " + score;
 
-            Circle body = new Circle
+            Snake.Add(new Circle
             {
                 X = Snake[Snake.Count - 1].X,
                 Y = Snake[Snake.Count - 1].Y
+            });
+
+            food = new Circle
+            {
+                X = rand.Next(2, maxWidth),
+                Y = rand.Next(2, maxHeight)
             };
 
-            Snake.Add(body);
+            powerup = null;
 
-            food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            if (rand.Next(0, 100) < 10)
+            {
+                Circle newPowerup;
+                int maxDistance = -1;
+                Circle head = Snake[0];
 
-            Setting.Speed -= 10;
+                for (int attempt = 0; attempt < 100; attempt++)
+                {
+                    int x = rand.Next(2, maxWidth);
+                    int y = rand.Next(2, maxHeight);
+                    newPowerup = new Circle { X = x, Y = y };
+
+                    bool onSnake = false;
+                    foreach (var segment in Snake)
+                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
+                            onSnake = true;
+
+                    if (onSnake) continue;
+
+                    int distance = Math.Abs(head.X - newPowerup.X) +
+                                   Math.Abs(head.Y - newPowerup.Y);
+
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                        powerup = newPowerup;
+                    }
+                }
+            }
+
             gameTime.Interval = Setting.Speed;
-
-            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            picCanvas.Invalidate();
         }
+
 
         private void EatPowerup()
         {
-            Circle body = new Circle
+            if (Snake.Count > 2)
             {
-                X = Snake[Snake.Count - 1].X,
-                Y = Snake[Snake.Count - 1].Y
-            };
-            
+                Snake.RemoveAt(Snake.Count - 1);
+                Snake.RemoveAt(Snake.Count - 1);
+            }
+
+            powerup = null;
+
             Setting.Speed = 100;
             gameTime.Interval = Setting.Speed;
 
-            Snake.Remove(body);
+            if (rand.Next(0, 100) < 10)
+            {
+                Circle newPowerup;
+                int maxDistance = -1;
+                Circle head = Snake[0];
 
-            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+                for (int attempt = 0; attempt < 100; attempt++)
+                {
+                    int x = rand.Next(2, maxWidth);
+                    int y = rand.Next(2, maxHeight);
+                    newPowerup = new Circle { X = x, Y = y };
+
+                    bool onSnake = false;
+                    foreach (var segment in Snake)
+                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
+                            onSnake = true;
+
+                    if (onSnake) continue;
+
+                    int distance = Math.Abs(head.X - newPowerup.X) +
+                                   Math.Abs(head.Y - newPowerup.Y);
+
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                        powerup = newPowerup;
+                    }
+                }
+            }
+
+            picCanvas.Invalidate();
         }
+
 
         private void Die()
         {
