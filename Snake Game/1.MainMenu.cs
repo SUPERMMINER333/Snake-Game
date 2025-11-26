@@ -34,5 +34,12 @@ namespace Snake_Game
         {
             Application.Exit();
         }
+
+        private void StatsButton_Click(object sender, EventArgs e)
+        {
+            RankingList RankingList = new RankingList();
+            RankingList.Show();
+            this.Hide();
+        }
     }
 }
