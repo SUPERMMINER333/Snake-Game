@@ -15,6 +15,7 @@ namespace Snake_Game
         private List<Circle> Snake = new List<Circle>();
         private Circle food = new Circle();
         private Circle powerup = new Circle();
+        private Circle kill = new Circle();
 
         int maxWidth;
         int maxHeight;
@@ -192,6 +193,12 @@ namespace Snake_Game
                         EatPowerup();
                     }
 
+                    if (kill != null && Snake[i].X == kill.X && Snake[i].Y == kill.Y)
+                    {
+                        Die();
+                        kill = null;
+                    }
+
 
                     for (int j = 1; j < Snake.Count; j++)
                     {
@@ -258,6 +265,16 @@ namespace Snake_Game
                 ));
             }
 
+            if (kill != null)
+            {
+                canvas.FillEllipse(Brushes.DarkRed, new Rectangle
+                (
+                    kill.X * Setting.Width,
+                    kill.Y * Setting.Height,
+                    Setting.Width, Setting.Height
+                ));
+            }
+
         }
 
         private void RestartGame()
@@ -291,6 +308,7 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
             powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            kill = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
@@ -353,6 +371,46 @@ namespace Snake_Game
             }
 
             gameTime.Interval = Setting.Speed;
+            picCanvas.Invalidate();
+        }
+
+        private void SpawnKillPowerup()
+        {
+            kill = null;
+
+            if (rand.Next(0, 100) < 10)
+            {
+                Circle newKill;
+                int maxDistance = -1;
+                Circle head = Snake[0];
+
+                for (int attempt = 0; attempt < 100; attempt++)
+                {
+                    int x = rand.Next(2, maxWidth);
+                    int y = rand.Next(2, maxHeight);
+                    newKill = new Circle { X = x, Y = y };
+
+                    bool onSnake = false;
+                    foreach (var segment in Snake)
+                    {
+                        if (segment.X == newKill.X && segment.Y == newKill.Y)
+                        {
+                            onSnake = true;
+                            break;
+                        }
+                    }
+                    if (onSnake) continue;
+
+                    int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
+
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                        kill = newKill;
+                    }
+                }
+            }
+
             picCanvas.Invalidate();
         }
 
