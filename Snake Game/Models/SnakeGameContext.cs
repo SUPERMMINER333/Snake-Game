@@ -39,7 +39,6 @@ public partial class SnakeGameContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.PlayerName).HasMaxLength(50);
             entity.Property(e => e.Score).HasColumnType("int(11)");
-            entity.Property(e => e.Speed).HasColumnType("int(11)");
         });
 
         OnModelCreatingPartial(modelBuilder);
