@@ -181,8 +181,6 @@ namespace Snake_Game
                         }
 
                     }
-
-
                 }
                 //Move body
                 else
@@ -228,7 +226,7 @@ namespace Snake_Game
             ));
 
         }
-
+        
         private void RestartGame()
         {
             StopButton.Enabled = false;
@@ -328,7 +326,6 @@ namespace Snake_Game
 
         public void DataBaseUpload(string currentPlayerName)
         {
-
             try
             {
                 using var db = new Models.SnakeGameContext();

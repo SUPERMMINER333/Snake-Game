@@ -31,6 +31,7 @@
             StartButton = new Button();
             StopButton = new Button();
             label1 = new Label();
+            StatsButton = new Button();
             SuspendLayout();
             // 
             // StartButton
@@ -51,7 +52,7 @@
             StopButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             StopButton.BackColor = Color.Red;
             StopButton.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            StopButton.Location = new Point(240, 446);
+            StopButton.Location = new Point(240, 532);
             StopButton.Name = "StopButton";
             StopButton.Size = new Size(320, 80);
             StopButton.TabIndex = 0;
@@ -69,11 +70,25 @@
             label1.TabIndex = 2;
             label1.Text = "Welcome to the Snake Game";
             // 
+            // StatsButton
+            // 
+            StatsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            StatsButton.BackColor = Color.Gold;
+            StatsButton.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            StatsButton.Location = new Point(240, 446);
+            StatsButton.Name = "StatsButton";
+            StatsButton.Size = new Size(320, 80);
+            StatsButton.TabIndex = 3;
+            StatsButton.Text = "Ranking List";
+            StatsButton.UseVisualStyleBackColor = false;
+            StatsButton.Click += StatsButton_Click;
+            // 
             // MainMenu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 753);
+            Controls.Add(StatsButton);
             Controls.Add(label1);
             Controls.Add(StartButton);
             Controls.Add(StopButton);
@@ -88,5 +103,6 @@
         private Button StartButton;
         private Button StopButton;
         private Label label1;
+        private Button StatsButton;
     }
 }
