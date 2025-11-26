@@ -337,7 +337,25 @@ namespace Snake_Game
             Setting.Speed = 100;
             gameTime.Interval = Setting.Speed;
 
-            Snake.Remove(body);
+            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+        }
+
+        private void EatPowerup()
+        {
+            Circle body = new Circle
+            {
+                X = Snake[Snake.Count - 1].X,
+                Y = Snake[Snake.Count - 1].Y
+            };
+            
+            Setting.Speed = 100;
+            gameTime.Interval = Setting.Speed;
+
+            if (Snake.Count > 1)
+            {
+                Snake.RemoveAt(Snake.Count - 1);
+                Snake.RemoveAt(Snake.Count - 1);
+            }
 
             powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
         }
