@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +21,7 @@ namespace Snake_Game
         private void LoadRankingList()
         {
             ListViewRanking.Items.Clear();
-
-            try
-            {
+            
                 // Initialize database context
                 using var db = new Models.SnakeGameContext();
                 if (!db.Database.CanConnect())
@@ -44,18 +38,10 @@ namespace Snake_Game
                                  .Take(100)
                                  .ToList();
 
-                // Handle case with no entries
-                if (rankings.Count == 0)
-                {
-                    var li = new ListViewItem(new[] { "-", "No entries in the database.", "-" });
-                    ListViewRanking.Items.Add(li);
-                    AdjustColumnWidths();
-                    return;
-                }
-
+                // Initialize rank counter
                 int rank = 1;
 
-                // Populate the ListView with ranking data
+                // Populate ListView with ranking data
                 foreach (var game in rankings)
                 {
                     var player = string.IsNullOrWhiteSpace(game.PlayerName) ? "Unknown" : game.PlayerName;
@@ -68,19 +54,7 @@ namespace Snake_Game
                     ListViewRanking.Items.Add(item);
                     rank++;
                 }
-
                 AdjustColumnWidths();
-            }
-
-            // Handle any exceptions that occur during database access
-            catch (Exception ex)
-            {
-                var li = new ListViewItem(new[] { "-", "Error loading the ranking list.", "-" });
-                ListViewRanking.Items.Add(li);
-                AdjustColumnWidths();
-                MessageBox.Show($"Error loading the ranking list:\n{ex.Message}\n\nINNER:\n{ex.InnerException?.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
         }
 
         private void AdjustColumnWidths()
