@@ -351,7 +351,6 @@ namespace Snake_Game
                     if (score > PlayerExists.Score)
                     {
                         PlayerExists.Score = score;
-                        PlayerExists.Speed = Setting.Speed;
                     }
 
                 }
@@ -361,7 +360,6 @@ namespace Snake_Game
                     {
                         PlayerName = currentPlayerName,
                         Score = score,
-                        Speed = Setting.Speed
                     };
                     db.SnakeGames.Add(Submit);
                 }
