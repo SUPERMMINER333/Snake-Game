@@ -45,39 +45,63 @@ namespace Snake_Game
 
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left)
+            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A)
             {
-                goLeft = true;
+                if (Setting.direction != "right")
+                {
+                    goLeft = true;
+                    goRight = false;
+                    goUp = false;
+                    goDown = false;
+                }
             }
-            if (e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.Right || e.KeyCode == Keys.D)
             {
-                goRight = true;
+                if (Setting.direction != "left")
+                {
+                    goRight = true;
+                    goLeft = false;
+                    goUp = false;
+                    goDown = false;
+                }
             }
-            if (e.KeyCode == Keys.Up)
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.W)
             {
-                goUp = true;
+                if (Setting.direction != "down")
+                {
+                    goUp = true;
+                    goLeft = false;
+                    goRight = false;
+                    goDown = false;
+                }
             }
-            if (e.KeyCode == Keys.Down)
+            if (e.KeyCode == Keys.Down || e.KeyCode == Keys.S)
             {
-                goDown = true;
+                if (Setting.direction != "up")
+                {
+                    goDown = true;
+                    goLeft = false;
+                    goRight = false;
+                    goUp = false;
+                }
             }
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left)
+            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A)
             {
                 goLeft = false;
             }
-            if (e.KeyCode == Keys.Right)
+            if (e.KeyCode == Keys.Right || e.KeyCode == Keys.D)
             {
                 goRight = false;
             }
-            if (e.KeyCode == Keys.Up)
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.W)
             {
                 goUp = false;
             }
-            if (e.KeyCode == Keys.Down)
+            if (e.KeyCode == Keys.Down || e.KeyCode == Keys.S)
             {
                 goDown = false;
             }
