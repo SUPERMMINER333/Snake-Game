@@ -195,7 +195,8 @@ namespace Snake_Game
 
                     if (kill != null && Snake[i].X == kill.X && Snake[i].Y == kill.Y)
                     {
-                        SpawnKillPowerup();
+                        kill = null;
+                        Die();
                     }
 
 
@@ -307,7 +308,7 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
             powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
-            kill = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            SpawnKillPowerup();
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
