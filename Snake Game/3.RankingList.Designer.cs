@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RankingList));
             TitelLabel = new Label();
             ListViewRanking = new ListView();
             colRank = new ColumnHeader();
@@ -97,6 +98,7 @@
             Controls.Add(StopButton);
             Controls.Add(ListViewRanking);
             Controls.Add(TitelLabel);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "RankingList";
             Text = "Snake Game";
             ResumeLayout(false);

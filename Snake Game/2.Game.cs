@@ -85,6 +85,12 @@ namespace Snake_Game
                     goUp = false;
                 }
             }
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+                Game newGame = new Game();
+                newGame.Show();
+            }
         }
 
         private void KeyIsUp(object sender, KeyEventArgs e)
