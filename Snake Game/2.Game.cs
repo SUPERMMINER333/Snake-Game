@@ -17,7 +17,6 @@ namespace Snake_Game
 
         int maxWidth;
         int maxHeight;
-
         int score;
         int highScore;
 
@@ -42,8 +41,6 @@ namespace Snake_Game
             PlayerNameText.Enabled = true;
             PlayerNameTextBox.Visible = true;
             PlayerNameTextBox.Enabled = true;
-
-
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -106,6 +103,7 @@ namespace Snake_Game
                 Setting.direction = "up";
             }
 
+            //Move the snake
             for (int i = Snake.Count - 1; i >= 0; i--)
             {
                 if (i == 0)
@@ -127,24 +125,25 @@ namespace Snake_Game
                             break;
                     }
 
+                    //Wall Collision
                     if (Snake[i].X < 0)
                     {
-                        Snake[i].X = maxWidth;
+                        Die();
                     }
                     if (Snake[i].X > maxWidth)
                     {
-                        Snake[i].X = 0;
+                        Die();
                     }
                     if (Snake[i].Y < 0)
                     {
-                        Snake[i].Y = maxHeight;
+                        Die();
                     }
                     if (Snake[i].Y > maxHeight)
                     {
-                        Snake[i].Y = 0;
+                        Die();
                     }
 
-
+                    //Eat food
                     if (Snake[i].X == food.X && Snake[i].Y == food.Y)
                     {
                         EatFood();
@@ -162,16 +161,13 @@ namespace Snake_Game
 
 
                 }
+                //Move body
                 else
                 {
                     Snake[i].X = Snake[i - 1].X;
                     Snake[i].Y = Snake[i - 1].Y;
                 }
             }
-
-
-            
-
 
             picCanvas.Invalidate();
         }
@@ -230,7 +226,7 @@ namespace Snake_Game
             score = 0;
             txtScore.Text = "Score: " + score;
 
-            Circle head = new Circle { X = 10, Y = 5 };
+            Circle head = new Circle { X = 15, Y = 15 };
             Snake.Add(head);
 
             for (int i = 0; i < 10; i++)
@@ -279,6 +275,11 @@ namespace Snake_Game
             RefreshButton.Visible = true;
 
             DataBaseUpload(currentPlayerName);
+
+            goDown = false;
+            goUp = false;
+            goLeft = false;
+            goRight = false;
         }
 
         private void StopGame(object sender, EventArgs e)
@@ -318,9 +319,8 @@ namespace Snake_Game
                 db.SnakeGames.Add(newSubmit);
                 db.SaveChanges();
 
-                MessageBox.Show("Your score has been submitted successfully!", "Submission Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //UI
                 PlayerNameTextBox.Clear();
-
                 StopButton.Enabled = true;
                 StopButton.Visible = true;
                 RefreshButton.Enabled = true;
@@ -329,7 +329,6 @@ namespace Snake_Game
                 PlayerNameTextBox.Visible = false;
                 PlayerNameText.Enabled = false;
                 PlayerNameText.Visible = false;
-
                 txtHighScore.ForeColor = Color.Black;
             }
             catch (Exception ex)
