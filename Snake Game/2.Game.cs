@@ -85,7 +85,6 @@ namespace Snake_Game
 
         private void GameTimer(object sender, EventArgs e)
         {
-
             if (goLeft)
             {
                 Setting.direction = "left";
@@ -196,7 +195,7 @@ namespace Snake_Game
                     ));
             }
 
-
+            //Draw food
             canvas.FillEllipse(Brushes.DarkRed, new Rectangle
             (
             food.X * Setting.Width,
@@ -237,6 +236,7 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
 
+            gameTime.Interval = Setting.Speed;
             gameTime.Start();
         }
 
