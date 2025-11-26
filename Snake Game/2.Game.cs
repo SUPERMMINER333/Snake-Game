@@ -329,12 +329,16 @@ namespace Snake_Game
             try
             {
                 using var db = new Models.SnakeGameContext();
-                var PlayerExists = db.SnakeGames.FirstOrDefault(x => x.PlayerName == currentPlayerName);
+                var PlayerExists = db.SnakeGames.FirstOrDefault(x => x.PlayerName.ToLower() == currentPlayerName.ToLower());
 
                 if (PlayerExists != null)
                 {
-                    PlayerExists.Score = score;
-                    PlayerExists.Speed = Setting.Speed;
+                    if (score > PlayerExists.Score)
+                    {
+                        PlayerExists.Score = score;
+                        PlayerExists.Speed = Setting.Speed;
+                    }
+
                 }
                 else
                 {
