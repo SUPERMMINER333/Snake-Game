@@ -88,7 +88,9 @@ namespace Snake_Game
         // Handle Stop button click
         private void StopButton_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.Show();
+            this.Hide();
         }
     }
 }

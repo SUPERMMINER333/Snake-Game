@@ -85,7 +85,7 @@
             StopButton.Name = "StopButton";
             StopButton.Size = new Size(150, 60);
             StopButton.TabIndex = 2;
-            StopButton.Text = "Exit";
+            StopButton.Text = "Back";
             StopButton.UseVisualStyleBackColor = false;
             StopButton.Click += StopButton_Click;
             // 
