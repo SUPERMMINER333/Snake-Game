@@ -14,6 +14,7 @@ namespace Snake_Game
 
         private List<Circle> Snake = new List<Circle>();
         private Circle food = new Circle();
+        private Circle powerup = new Circle();
 
         int maxWidth;
         int maxHeight;
@@ -90,6 +91,13 @@ namespace Snake_Game
                 this.Close();
                 Game newGame = new Game();
                 newGame.Show();
+            }
+            if (e.KeyCode == Keys.F1)
+            {
+                if (gameTime.Enabled == true)
+                {
+                    Application.Exit();
+                }
             }
         }
 
@@ -178,6 +186,12 @@ namespace Snake_Game
                         EatFood();
                     }
 
+                    //Eat powerup
+                    if (Snake[i].X == powerup.X && Snake[i].Y == powerup.Y)
+                    {
+                        EatPowerup();
+                    }
+
                     for (int j = 1; j < Snake.Count; j++)
                     {
 
@@ -200,6 +214,7 @@ namespace Snake_Game
         }
         private void UpdateGameBoard(object sender, PaintEventArgs e)
         {
+            //Draw snake
             Graphics canvas = e.Graphics;
 
             Brush snakeColour;
@@ -231,8 +246,15 @@ namespace Snake_Game
             Setting.Width, Setting.Height
             ));
 
+            //Draw powerup
+            canvas.FillEllipse(Brushes.Gold, new Rectangle
+            (
+            powerup.X * Setting.Width,
+            powerup.Y * Setting.Height,
+            Setting.Width, Setting.Height
+            ));
         }
-        
+
         private void RestartGame()
         {
             StopButton.Enabled = false;
@@ -263,6 +285,7 @@ namespace Snake_Game
             }
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
@@ -297,7 +320,26 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
 
+            Setting.Speed -= 10;
             gameTime.Interval = Setting.Speed;
+
+            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+        }
+
+        private void EatPowerup()
+        {
+            Circle body = new Circle
+            {
+                X = Snake[Snake.Count - 1].X,
+                Y = Snake[Snake.Count - 1].Y
+            };
+            
+            Setting.Speed = 100;
+            gameTime.Interval = Setting.Speed;
+
+            Snake.Remove(body);
+
+            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
         }
 
         private void Die()
@@ -407,7 +449,7 @@ namespace Snake_Game
                 }
 
                 currentPlayerName = playerName;
-                
+
                 PlayerNameTextBox.Enabled = false;
                 RestartGame();
             }
