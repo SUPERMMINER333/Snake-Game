@@ -28,7 +28,6 @@ namespace Snake_Game
             Game Game = new Game();
             Game.Show();
             this.Hide();
-
         }
 
         private void StopButton_Click(object sender, EventArgs e)
