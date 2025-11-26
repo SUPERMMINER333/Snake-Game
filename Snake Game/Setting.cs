@@ -17,7 +17,7 @@ namespace Snake_Game
             Width = 16;
             Height = 16;
             direction = "right";
-            Speed = 16;
+            Speed = 100;
             Score = 0;
         }
     }
