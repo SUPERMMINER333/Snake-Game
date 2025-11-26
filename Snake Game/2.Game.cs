@@ -258,6 +258,8 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
 
+            GetCurrentPlayerHighscore(currentPlayerName);
+
             gameTime.Interval = Setting.Speed;
             gameTime.Start();
         }
@@ -282,14 +284,6 @@ namespace Snake_Game
         private void Die()
         {
             gameTime.Stop();
-
-            if (score > highScore)
-            {
-                highScore = score;
-
-                txtHighScore.Text = "High Score: " + highScore;
-                txtHighScore.ForeColor = Color.Maroon;
-            }
 
             StopButton.Enabled = true;
             StopButton.Visible = true;
@@ -398,6 +392,31 @@ namespace Snake_Game
                 PlayerNameTextBox.Enabled = false;
                 RestartGame();
             }
+        }
+
+        public void GetCurrentPlayerHighscore(string currentPlayername)
+        {
+            using var db = new Models.SnakeGameContext();
+
+            var nameLower = currentPlayerName.ToLower().Trim();
+
+            var playerHighScore = db.SnakeGames.FirstOrDefault(x => x.PlayerName.ToLower() == nameLower);
+
+            if (playerHighScore != null)
+            {
+                highScore = (int)playerHighScore.Score;
+
+                txtHighScore.Text = "High Score: " + highScore;
+                txtHighScore.ForeColor = Color.Maroon;
+            }
+            else
+            {
+                highScore = 0;
+
+                txtHighScore.Text = "High Score: -";
+                MessageBox.Show("-*");
+            }
+
         }
     }
 }
