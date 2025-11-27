@@ -594,26 +594,38 @@
 
         public void GetCurrentPlayerHighscore(string currentPlayername)
         {
-            using var db = new Models.SnakeGameContext();
-
-            var nameLower = currentPlayerName.ToLower().Trim();
-
-            var playerHighScore = db.SnakeGames.FirstOrDefault(x => x.PlayerName.ToLower() == nameLower);
-
-            if (playerHighScore != null)
+            try
             {
-                highScore = (int)playerHighScore.Score;
+                using var db = new Models.SnakeGameContext();
 
-                txtHighScore.Text = "High Score: " + highScore;
-                txtHighScore.ForeColor = Color.Maroon;
+                var nameLower = currentPlayerName.ToLower().Trim();
+
+                var playerHighScore = db.SnakeGames.FirstOrDefault(x => x.PlayerName.ToLower() == nameLower);
+
+                if (playerHighScore != null)
+                {
+                    highScore = (int)playerHighScore.Score;
+
+                    txtHighScore.Text = "High Score: " + highScore;
+                    txtHighScore.ForeColor = Color.Maroon;
+                }
+                else
+                {
+                    highScore = 0;
+
+                    txtHighScore.Text = "High Score: -";
+                }
             }
-            else
+            catch (Exception ex)
             {
+                // If database connection fails, set default values and continue game startup
                 highScore = 0;
-
                 txtHighScore.Text = "High Score: -";
-            }
+                txtHighScore.ForeColor = Color.Black;
 
+                // Log the error to console for debugging
+                Console.WriteLine($"Database error while fetching high score: {ex.Message}");
+            }
         }
     }
 }
