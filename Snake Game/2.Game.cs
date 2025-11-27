@@ -336,9 +336,9 @@ namespace Snake_Game
                 Y = rand.Next(2, maxHeight)
             };
 
-            // Spawn new powerup with 10% chance
+            // Spawn new powerup with 15% chance
             powerup = null;
-            if (rand.Next(0, 100) < 10)
+            if (rand.Next(0, 100) < 15)
             {
                 Circle newPowerup;
                 int maxDistance = -1;
@@ -408,6 +408,7 @@ namespace Snake_Game
 
                 Die();
             }
+            Console.WriteLine(rand.Next(0, 100).ToString());
         }
 
 
