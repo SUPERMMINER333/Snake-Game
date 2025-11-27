@@ -692,8 +692,9 @@ namespace Snake_Game
                 // Start the game
                 RestartGame();
 
-                // Set focus to the game canvas
-                picCanvas.Focus();
+                // Set focus back to the form to ensure keyboard input works
+                this.ActiveControl = null;
+                this.Focus();
             }
         }
 
