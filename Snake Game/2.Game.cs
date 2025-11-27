@@ -45,6 +45,8 @@ namespace Snake_Game
             PlayerNameTextBox.Enabled = true;
             RipLabel.Visible = false;
             RipLabel.Enabled = false;
+            BackButton.Visible = false;
+            BackButton.Enabled = false;
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -290,6 +292,8 @@ namespace Snake_Game
             PlayerNameTextBox.Enabled = false;
             RipLabel.Visible = false;
             RipLabel.Enabled = false;
+            BackButton.Visible = false;
+            BackButton.Enabled = false;
 
             maxWidth = picCanvas.Width / Setting.Width - 1;
             maxHeight = picCanvas.Height / Setting.Height - 1;
@@ -560,6 +564,8 @@ namespace Snake_Game
             RefreshButton.Visible = true;
             RipLabel.Visible = true;
             RipLabel.Enabled = true;
+            BackButton.Visible = true;
+            BackButton.Enabled = true;
 
             DataBaseUpload(currentPlayerName);
 
@@ -690,6 +696,13 @@ namespace Snake_Game
                 txtHighScore.Text = "High Score: -";
             }
 
+        }
+
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.Show();
+            this.Close();
         }
     }
 }

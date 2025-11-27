@@ -39,6 +39,7 @@
             PlayerNameTextBox = new TextBox();
             PlayerNameText = new Label();
             RipLabel = new Label();
+            BackButton = new Button();
             ((System.ComponentModel.ISupportInitialize)picCanvas).BeginInit();
             SuspendLayout();
             // 
@@ -140,11 +141,26 @@
             RipLabel.TabIndex = 6;
             RipLabel.Text = "RIP";
             // 
+            // BackButton
+            // 
+            BackButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            BackButton.BackColor = Color.DeepSkyBlue;
+            BackButton.BackgroundImage = Properties.Resources.rsz_back;
+            BackButton.BackgroundImageLayout = ImageLayout.Center;
+            BackButton.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BackButton.Location = new Point(286, 9);
+            BackButton.Name = "BackButton";
+            BackButton.Size = new Size(76, 76);
+            BackButton.TabIndex = 7;
+            BackButton.UseVisualStyleBackColor = false;
+            BackButton.Click += BackButton_Click;
+            // 
             // Game
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 753);
+            Controls.Add(BackButton);
             Controls.Add(RipLabel);
             Controls.Add(PlayerNameText);
             Controls.Add(PlayerNameTextBox);
@@ -174,5 +190,6 @@
         private TextBox PlayerNameTextBox;
         private Label PlayerNameText;
         private Label RipLabel;
+        private Button BackButton;
     }
 }
