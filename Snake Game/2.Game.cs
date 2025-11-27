@@ -312,6 +312,7 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
             powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            kill = null;
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
@@ -327,6 +328,8 @@ namespace Snake_Game
             else if (Setting.Speed > 1)
                 Setting.Speed -= 1;
 
+            gameTime.Interval = Setting.Speed;
+
             txtScore.Text = "Score: " + score;
 
             Snake.Add(new Circle
@@ -335,15 +338,46 @@ namespace Snake_Game
                 Y = Snake[Snake.Count - 1].Y
             });
 
-            food = new Circle
+            // Spawn food in a position that doesn't overlap with snake or other items
+            for (int attempt = 0; attempt < 100; attempt++)
             {
-                X = rand.Next(2, maxWidth),
-                Y = rand.Next(2, maxHeight)
-            };
+                int x = rand.Next(2, maxWidth);
+                int y = rand.Next(2, maxHeight);
+                Circle newFood = new Circle { X = x, Y = y };
 
-            // Spawn new powerup with 15% chance
-            powerup = null;
-            if (rand.Next(0, 100) < 15)
+                bool isOccupied = false;
+
+                // Check if position overlaps with snake
+                foreach (var segment in Snake)
+                {
+                    if (segment.X == newFood.X && segment.Y == newFood.Y)
+                    {
+                        isOccupied = true;
+                        break;
+                    }
+                }
+
+                // Check if position overlaps with powerup
+                if (!isOccupied && powerup != null && powerup.X == newFood.X && powerup.Y == newFood.Y)
+                {
+                    isOccupied = true;
+                }
+
+                // Check if position overlaps with kill
+                if (!isOccupied && kill != null && kill.X == newFood.X && kill.Y == newFood.Y)
+                {
+                    isOccupied = true;
+                }
+
+                if (!isOccupied)
+                {
+                    food = newFood;
+                    break;
+                }
+            }
+
+            // Spawn new powerup with 15% chance (only if none exists)
+            if (powerup == null && rand.Next(0, 100) < 15)
             {
                 Circle newPowerup;
                 int maxDistance = -1;
@@ -355,12 +389,31 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newPowerup = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
-                    foreach (var segment in Snake)
-                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
-                            onSnake = true;
+                    bool isOccupied = false;
 
-                    if (onSnake) continue;
+                    // Check if position overlaps with snake
+                    foreach (var segment in Snake)
+                    {
+                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
+                        {
+                            isOccupied = true;
+                            break;
+                        }
+                    }
+
+                    // Check if position overlaps with food
+                    if (!isOccupied && food.X == newPowerup.X && food.Y == newPowerup.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    // Check if position overlaps with kill
+                    if (!isOccupied && kill != null && kill.X == newPowerup.X && kill.Y == newPowerup.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    if (isOccupied) continue;
 
                     int distance = Math.Abs(head.X - newPowerup.X) +
                                    Math.Abs(head.Y - newPowerup.Y);
@@ -371,7 +424,6 @@ namespace Snake_Game
                         powerup = newPowerup;
                     }
                 }
-                gameTime.Interval = Setting.Speed;
                 picCanvas.Invalidate();
             }
 
@@ -388,16 +440,31 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newKill = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
+                    bool isOccupied = false;
+
+                    // Check if position overlaps with snake
                     foreach (var segment in Snake)
                     {
                         if (segment.X == newKill.X && segment.Y == newKill.Y)
                         {
-                            onSnake = true;
+                            isOccupied = true;
                             break;
                         }
                     }
-                    if (onSnake) continue;
+
+                    // Check if position overlaps with food
+                    if (!isOccupied && food.X == newKill.X && food.Y == newKill.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    // Check if position overlaps with powerup
+                    if (!isOccupied && powerup != null && powerup.X == newKill.X && powerup.Y == newKill.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    if (isOccupied) continue;
 
                     int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
 
@@ -438,12 +505,31 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newPowerup = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
-                    foreach (var segment in Snake)
-                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
-                            onSnake = true;
+                    bool isOccupied = false;
 
-                    if (onSnake) continue;
+                    // Check if position overlaps with snake
+                    foreach (var segment in Snake)
+                    {
+                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
+                        {
+                            isOccupied = true;
+                            break;
+                        }
+                    }
+
+                    // Check if position overlaps with food
+                    if (!isOccupied && food.X == newPowerup.X && food.Y == newPowerup.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    // Check if position overlaps with kill
+                    if (!isOccupied && kill != null && kill.X == newPowerup.X && kill.Y == newPowerup.Y)
+                    {
+                        isOccupied = true;
+                    }
+
+                    if (isOccupied) continue;
 
                     int distance = Math.Abs(head.X - newPowerup.X) +
                                    Math.Abs(head.Y - newPowerup.Y);
