@@ -495,6 +495,10 @@
                 StopButton.Visible = true;
                 RefreshButton.Enabled = true;
                 RefreshButton.Visible = true;
+                PlayerNameText.Visible = false;
+                PlayerNameText.Enabled = false;
+                PlayerNameTextBox.Visible = false;
+                PlayerNameTextBox.Enabled = false;
                 RipLabel.Visible = true;
                 RipLabel.Enabled = true;
             }
