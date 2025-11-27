@@ -376,8 +376,12 @@ namespace Snake_Game
                 }
             }
 
-            // Spawn new powerup with 15% chance (only if none exists)
-            if (powerup == null && rand.Next(0, 100) < 15)
+            // Despawn existing powerups when eating food
+            powerup = null;
+            kill = null;
+
+            // Spawn new powerup with 15% chance
+            if (rand.Next(0, 100) < 15)
             {
                 Circle newPowerup;
                 int maxDistance = -1;
@@ -427,8 +431,8 @@ namespace Snake_Game
                 picCanvas.Invalidate();
             }
 
-            // Spawn new kill powerup with 10% chance (only if none exists)
-            if (kill == null && rand.Next(0, 100) < 10)
+            // Spawn new kill powerup with 10% chance
+            if (rand.Next(0, 100) < 10)
             {
                 Circle newKill;
                 int maxDistance = -1;
