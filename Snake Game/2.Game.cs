@@ -11,24 +11,32 @@ namespace Snake_Game
 {
     public partial class Game : Form
     {
+        // Game objects
+        private List<Circle> Snake = new List<Circle>();  // Snake body segments
+        private Circle food = new Circle();                // Regular food item (red)
+        private Circle powerup = new Circle();             // Speed powerup (gold) - makes snake shorter and slower
+        private Circle kill = new Circle();                // Kill powerup (dark red) - instant death
 
-        private List<Circle> Snake = new List<Circle>();
-        private Circle food = new Circle();
-        private Circle powerup = new Circle();
-        private Circle kill = new Circle();
+        // Game boundaries
+        int maxWidth;   // Maximum grid width
+        int maxHeight;  // Maximum grid height
 
-        int maxWidth;
-        int maxHeight;
-        int score;
-        int highScore;
+        // Score tracking
+        int score;      // Current score
+        int highScore;  // Player's high score
 
-
+        // Player info
         string currentPlayerName;
 
+        // Random number generator for spawning items
         Random rand = new Random();
 
+        // Movement flags for keyboard input
         bool goLeft, goRight, goUp, goDown;
 
+        /// <summary>
+        /// Initializes a new game instance
+        /// </summary>
         public Game()
         {
             InitializeComponent();
@@ -38,11 +46,17 @@ namespace Snake_Game
             SetInitialUIState();
         }
 
+        /// <summary>
+        /// Handles keyboard key press events for controlling snake direction
+        /// Supports arrow keys and WASD controls
+        /// Prevents 180-degree turns (e.g., can't go right if currently going left)
+        /// </summary>
         private void KeyIsDown(object sender, KeyEventArgs e)
         {
+            // Left movement (Left Arrow or A key)
             if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A)
             {
-                if (Setting.direction != "right")
+                if (Setting.direction != "right")  // Prevent reversing into itself
                 {
                     goLeft = true;
                     goRight = false;
@@ -50,9 +64,10 @@ namespace Snake_Game
                     goDown = false;
                 }
             }
+            // Right movement (Right Arrow or D key)
             if (e.KeyCode == Keys.Right || e.KeyCode == Keys.D)
             {
-                if (Setting.direction != "left")
+                if (Setting.direction != "left")  // Prevent reversing into itself
                 {
                     goRight = true;
                     goLeft = false;
@@ -60,9 +75,10 @@ namespace Snake_Game
                     goDown = false;
                 }
             }
+            // Up movement (Up Arrow or W key)
             if (e.KeyCode == Keys.Up || e.KeyCode == Keys.W)
             {
-                if (Setting.direction != "down")
+                if (Setting.direction != "down")  // Prevent reversing into itself
                 {
                     goUp = true;
                     goLeft = false;
@@ -70,9 +86,10 @@ namespace Snake_Game
                     goDown = false;
                 }
             }
+            // Down movement (Down Arrow or S key)
             if (e.KeyCode == Keys.Down || e.KeyCode == Keys.S)
             {
-                if (Setting.direction != "up")
+                if (Setting.direction != "up")  // Prevent reversing into itself
                 {
                     goDown = true;
                     goLeft = false;
@@ -80,12 +97,14 @@ namespace Snake_Game
                     goUp = false;
                 }
             }
+            // Escape key - restart game
             if (e.KeyCode == Keys.Escape)
             {
                 this.Close();
                 Game newGame = new Game();
                 newGame.Show();
             }
+            // F1 key - exit application (only during active game)
             if (e.KeyCode == Keys.F1)
             {
                 if (gameTime.Enabled == true)
@@ -95,6 +114,10 @@ namespace Snake_Game
             }
         }
 
+        /// <summary>
+        /// Handles keyboard key release events
+        /// Resets movement flags when keys are released
+        /// </summary>
         private void KeyIsUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Left || e.KeyCode == Keys.A)
@@ -115,8 +138,13 @@ namespace Snake_Game
             }
         }
 
+        /// <summary>
+        /// Main game loop timer - handles snake movement, collision detection, and item collection
+        /// Called repeatedly at intervals determined by game speed
+        /// </summary>
         private void GameTimer(object sender, EventArgs e)
         {
+            // Update direction based on current movement flags
             if (goLeft)
             {
                 Setting.direction = "left";
@@ -134,12 +162,12 @@ namespace Snake_Game
                 Setting.direction = "up";
             }
 
-            //Move the snake
+            // Move the snake - process from tail to head
             for (int i = Snake.Count - 1; i >= 0; i--)
             {
-                if (i == 0)
+                if (i == 0)  // Head of snake
                 {
-
+                    // Move head in current direction
                     switch (Setting.direction)
                     {
                         case "left":
@@ -156,7 +184,7 @@ namespace Snake_Game
                             break;
                     }
 
-                    //Wall Collision
+                    // Check wall collisions (game boundaries)
                     if (Snake[i].X < 0)
                     {
                         Die();
@@ -174,35 +202,35 @@ namespace Snake_Game
                         Die();
                     }
 
-                    //Eat food
+                    // Check food collection
                     if (Snake[i].X == food.X && Snake[i].Y == food.Y)
                     {
                         EatFood();
                     }
 
-                    //Eat powerup
+                    // Check powerup collection (gold item - makes snake shorter and slower)
                     if (powerup != null && Snake[i].X == powerup.X && Snake[i].Y == powerup.Y)
                     {
                         EatPowerup();
                     }
 
+                    // Check kill powerup collision (dark red item - instant death)
                     if (kill != null && Snake[i].X == kill.X && Snake[i].Y == kill.Y)
                     {
                         kill = null;
                         Die();
                     }
 
-
+                    // Check self-collision (snake hitting its own body)
                     for (int j = 1; j < Snake.Count; j++)
                     {
-
                         if (Snake[i].X == Snake[j].X && Snake[i].Y == Snake[j].Y)
                         {
                             Die();
                         }
                     }
                 }
-                //Move body
+                // Move body segments - each segment follows the one in front
                 else
                 {
                     Snake[i].X = Snake[i - 1].X;
@@ -212,22 +240,26 @@ namespace Snake_Game
 
             picCanvas.Invalidate();
         }
+
+        /// <summary>
+        /// Renders all game objects on the canvas
+        /// Draws the snake, food, and powerups (if they exist)
+        /// </summary>
         private void UpdateGameBoard(object sender, PaintEventArgs e)
         {
-            //Draw snake
             Graphics canvas = e.Graphics;
-
             Brush snakeColour;
 
+            // Draw snake - head is black, body is dark green
             for (int i = 0; i < Snake.Count; i++)
             {
                 if (i == 0)
                 {
-                    snakeColour = Brushes.Black;
+                    snakeColour = Brushes.Black;  // Head
                 }
                 else
                 {
-                    snakeColour = Brushes.DarkGreen;
+                    snakeColour = Brushes.DarkGreen;  // Body
                 }
 
                 canvas.FillEllipse(snakeColour, new Rectangle
@@ -238,7 +270,7 @@ namespace Snake_Game
                     ));
             }
 
-            //Draw food
+            // Draw food (red)
             canvas.FillEllipse(Brushes.Red, new Rectangle
             (
             food.X * Setting.Width,
@@ -246,7 +278,7 @@ namespace Snake_Game
             Setting.Width, Setting.Height
             ));
 
-            // Draw powerup, nur wenn es existiert
+            // Draw gold powerup (only if it exists)
             if (powerup != null)
             {
                 canvas.FillEllipse(Brushes.Gold, new Rectangle
@@ -257,6 +289,7 @@ namespace Snake_Game
                 ));
             }
 
+            // Draw kill powerup (dark red, only if it exists)
             if (kill != null)
             {
                 canvas.FillEllipse(Brushes.DarkRed, new Rectangle
@@ -269,20 +302,29 @@ namespace Snake_Game
 
         }
 
+        /// <summary>
+        /// Resets the game to initial state and starts a new game
+        /// Clears the board, spawns initial items, and starts the game timer
+        /// </summary>
         private void RestartGame()
         {
             SetGameUIState(gameRunning: true);
 
+            // Calculate game grid dimensions
             maxWidth = picCanvas.Width / Setting.Width - 1;
             maxHeight = picCanvas.Height / Setting.Height - 1;
 
+            // Clear existing snake
             Snake.Clear();
 
+            // Reset canvas color
             picCanvas.BackColor = Color.Silver;
 
+            // Reset score
             score = 0;
             txtScore.Text = "Score: " + score;
 
+            // Create initial snake (head + 10 body segments)
             Circle head = new Circle { X = 15, Y = 15 };
             Snake.Add(head);
 
@@ -292,19 +334,29 @@ namespace Snake_Game
                 Snake.Add(body);
             }
 
+            // Spawn initial items
             SpawnFood();
             SpawnPowerup();
-            kill = null;
+            kill = null;  // No kill powerup at start
 
+            // Load player's high score
             GetCurrentPlayerHighscore(currentPlayerName);
 
+            // Start game timer
             gameTime.Interval = Setting.Speed;
             gameTime.Start();
         }
 
+        /// <summary>
+        /// Handles food collection - increases score, grows snake, speeds up game
+        /// Has chance to spawn powerups (15% for gold, 10% for kill)
+        /// </summary>
         private void EatFood()
         {
+            // Increase score
             score += 1;
+
+            // Gradually increase game speed (decrease interval)
             if (Setting.Speed > 10)
                 Setting.Speed -= 5;
             else if (Setting.Speed > 1)
@@ -312,12 +364,14 @@ namespace Snake_Game
 
             txtScore.Text = "Score: " + score;
 
+            // Grow snake by adding new segment at tail position
             Snake.Add(new Circle
             {
                 X = Snake[Snake.Count - 1].X,
                 Y = Snake[Snake.Count - 1].Y
             });
 
+            // Spawn new food at a free position
             SpawnFood();
 
             // Spawn new powerup with 15% chance (only if none exists)
@@ -338,17 +392,23 @@ namespace Snake_Game
             Console.WriteLine(rand.Next(0, 100).ToString());
         }
 
-
+        /// <summary>
+        /// Handles gold powerup collection - shrinks snake and slows down game
+        /// Has 10% chance to spawn another powerup
+        /// </summary>
         private void EatPowerup()
         {
+            // Shrink snake by removing 2 tail segments (if snake is long enough)
             if (Snake.Count > 2)
             {
                 Snake.RemoveAt(Snake.Count - 1);
                 Snake.RemoveAt(Snake.Count - 1);
             }
 
+            // Remove current powerup
             powerup = null;
 
+            // Slow down game to base speed
             Setting.Speed = 100;
             gameTime.Interval = Setting.Speed;
 
@@ -361,26 +421,41 @@ namespace Snake_Game
             picCanvas.Invalidate();
         }
 
-
+        /// <summary>
+        /// Handles game over - stops game, updates UI, saves score to database
+        /// </summary>
         private void Die()
         {
+            // Stop game timer
             gameTime.Stop();
 
+            // Update UI to show game over state
             SetGameUIState(gameRunning: false);
 
+            // Save score to database
             DataBaseUpload(currentPlayerName);
 
+            // Reset movement flags
             goDown = false;
             goUp = false;
             goLeft = false;
             goRight = false;
 
+            // Reset speed to base value
             Setting.Speed = 100;
 
+            // Change canvas to red to indicate death
             picCanvas.BackColor = Color.Red;
             picCanvas.Invalidate();
         }
 
+        /// <summary>
+        /// Checks if a grid position is occupied by snake, food, or any powerup
+        /// Used to prevent items from spawning on top of each other
+        /// </summary>
+        /// <param name="x">X coordinate on grid</param>
+        /// <param name="y">Y coordinate on grid</param>
+        /// <returns>True if position is occupied, false otherwise</returns>
         private bool IsPositionOccupied(int x, int y)
         {
             // Check if position is on snake
@@ -405,6 +480,10 @@ namespace Snake_Game
             return false;
         }
 
+        /// <summary>
+        /// Spawns food at a random free position on the grid
+        /// Keeps generating positions until a free one is found
+        /// </summary>
         private void SpawnFood()
         {
             do
@@ -417,12 +496,18 @@ namespace Snake_Game
             } while (IsPositionOccupied(food.X, food.Y));
         }
 
+        /// <summary>
+        /// Spawns gold powerup as far as possible from snake head
+        /// Tries 100 positions and picks the one furthest from the head
+        /// Skips occupied positions
+        /// </summary>
         private void SpawnPowerup()
         {
             Circle newPowerup;
             int maxDistance = -1;
             Circle head = Snake[0];
 
+            // Try 100 random positions and pick the furthest from snake head
             for (int attempt = 0; attempt < 100; attempt++)
             {
                 int x = rand.Next(2, maxWidth);
@@ -431,9 +516,11 @@ namespace Snake_Game
 
                 if (IsPositionOccupied(x, y)) continue;
 
+                // Calculate Manhattan distance from head
                 int distance = Math.Abs(head.X - newPowerup.X) +
                                Math.Abs(head.Y - newPowerup.Y);
 
+                // Keep track of furthest position
                 if (distance > maxDistance)
                 {
                     maxDistance = distance;
@@ -442,12 +529,18 @@ namespace Snake_Game
             }
         }
 
+        /// <summary>
+        /// Spawns kill powerup as far as possible from snake head
+        /// Tries 100 positions and picks the one furthest from the head
+        /// Skips occupied positions
+        /// </summary>
         private void SpawnKillPowerup()
         {
             Circle newKill;
             int maxDistance = -1;
             Circle head = Snake[0];
 
+            // Try 100 random positions and pick the furthest from snake head
             for (int attempt = 0; attempt < 100; attempt++)
             {
                 int x = rand.Next(2, maxWidth);
@@ -456,8 +549,10 @@ namespace Snake_Game
 
                 if (IsPositionOccupied(x, y)) continue;
 
+                // Calculate Manhattan distance from head
                 int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
 
+                // Keep track of furthest position
                 if (distance > maxDistance)
                 {
                     maxDistance = distance;
@@ -466,6 +561,9 @@ namespace Snake_Game
             }
         }
 
+        /// <summary>
+        /// Sets UI to initial state - waiting for player name entry
+        /// </summary>
         private void SetInitialUIState()
         {
             // Initial state - waiting for player name
