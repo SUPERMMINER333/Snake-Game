@@ -410,8 +410,6 @@ namespace Snake_Game
                     }
                 }
                 picCanvas.Invalidate();
-
-                Die();
             }
             Console.WriteLine(rand.Next(0, 100).ToString());
         }
