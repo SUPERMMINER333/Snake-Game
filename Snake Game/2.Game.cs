@@ -669,18 +669,31 @@ namespace Snake_Game
                 if (string.IsNullOrWhiteSpace(playerName))
                 {
                     MessageBox.Show("Please enter a valid name before submitting your score.", "Invalid Name", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Handled = true;
                     return;
                 }
                 if (playerName.Length > 20)
                 {
                     MessageBox.Show("Player name is too long. Please enter a name with 20 characters or fewer.", "Name Too Long", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Handled = true;
                     return;
                 }
 
                 currentPlayerName = playerName;
 
+                // Prevent the Enter key from causing issues
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                // Hide and disable the textbox before starting the game
                 PlayerNameTextBox.Enabled = false;
+                PlayerNameTextBox.Visible = false;
+
+                // Start the game
                 RestartGame();
+
+                // Set focus to the game canvas
+                picCanvas.Focus();
             }
         }
 
