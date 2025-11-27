@@ -38,6 +38,7 @@
             RefreshButton = new Button();
             PlayerNameTextBox = new TextBox();
             PlayerNameText = new Label();
+            RipLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)picCanvas).BeginInit();
             SuspendLayout();
             // 
@@ -128,11 +129,23 @@
             PlayerNameText.TabIndex = 5;
             PlayerNameText.Text = "Player Name:";
             // 
+            // RipLabel
+            // 
+            RipLabel.AutoSize = true;
+            RipLabel.BackColor = Color.Red;
+            RipLabel.Font = new Font("Impact", 72F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RipLabel.Location = new Point(291, 164);
+            RipLabel.Name = "RipLabel";
+            RipLabel.Size = new Size(224, 145);
+            RipLabel.TabIndex = 6;
+            RipLabel.Text = "RIP";
+            // 
             // Game
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(782, 753);
+            Controls.Add(RipLabel);
             Controls.Add(PlayerNameText);
             Controls.Add(PlayerNameTextBox);
             Controls.Add(RefreshButton);
@@ -160,5 +173,6 @@
         private Button RefreshButton;
         private TextBox PlayerNameTextBox;
         private Label PlayerNameText;
+        private Label RipLabel;
     }
 }

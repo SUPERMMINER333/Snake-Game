@@ -43,6 +43,8 @@ namespace Snake_Game
             PlayerNameText.Enabled = true;
             PlayerNameTextBox.Visible = true;
             PlayerNameTextBox.Enabled = true;
+            RipLabel.Visible = false;
+            RipLabel.Enabled = false;
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -286,12 +288,15 @@ namespace Snake_Game
             PlayerNameText.Enabled = false;
             PlayerNameTextBox.Visible = false;
             PlayerNameTextBox.Enabled = false;
+            RipLabel.Visible = false;
+            RipLabel.Enabled = false;
 
             maxWidth = picCanvas.Width / Setting.Width - 1;
             maxHeight = picCanvas.Height / Setting.Height - 1;
 
             Snake.Clear();
 
+            picCanvas.BackColor = Color.Silver;
 
             score = 0;
             txtScore.Text = "Score: " + score;
@@ -467,6 +472,8 @@ namespace Snake_Game
             StopButton.Visible = true;
             RefreshButton.Enabled = true;
             RefreshButton.Visible = true;
+            RipLabel.Visible = true;
+            RipLabel.Enabled = true;
 
             DataBaseUpload(currentPlayerName);
 
@@ -476,6 +483,9 @@ namespace Snake_Game
             goRight = false;
 
             Setting.Speed = 100;
+
+            picCanvas.BackColor = Color.Red;
+            picCanvas.Invalidate();
         }
 
         private void StopGame(object sender, EventArgs e)
