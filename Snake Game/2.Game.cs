@@ -246,7 +246,7 @@ namespace Snake_Game
             }
 
             //Draw food
-            canvas.FillEllipse(Brushes.DarkRed, new Rectangle
+            canvas.FillEllipse(Brushes.Red, new Rectangle
             (
             food.X * Setting.Width,
             food.Y * Setting.Height,
@@ -307,7 +307,6 @@ namespace Snake_Game
 
             food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
             powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
-            SpawnKillPowerup();
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
@@ -337,8 +336,8 @@ namespace Snake_Game
                 Y = rand.Next(2, maxHeight)
             };
 
+            // Spawn new powerup with 10% chance
             powerup = null;
-
             if (rand.Next(0, 100) < 10)
             {
                 Circle newPowerup;
@@ -367,14 +366,11 @@ namespace Snake_Game
                         powerup = newPowerup;
                     }
                 }
+                gameTime.Interval = Setting.Speed;
+                picCanvas.Invalidate();
             }
 
-            gameTime.Interval = Setting.Speed;
-            picCanvas.Invalidate();
-        }
-
-        private void SpawnKillPowerup()
-        {
+            // Spawn new kill powerup with 10% chance
             kill = null;
 
             if (rand.Next(0, 100) < 10)
@@ -408,11 +404,10 @@ namespace Snake_Game
                         kill = newKill;
                     }
                 }
+                picCanvas.Invalidate();
+
+                Die();
             }
-
-            picCanvas.Invalidate();
-
-            Die();
         }
 
 
