@@ -207,7 +207,6 @@ namespace Snake_Game
                         {
                             Die();
                         }
-
                     }
                 }
                 //Move body
