@@ -576,7 +576,7 @@ namespace Snake_Game
 
             Setting.Speed = 100;
 
-            picCanvas.BackColor = Color.Red;
+            picCanvas.BackColor = Color.LightCoral;
             picCanvas.Invalidate();
         }
 

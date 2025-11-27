@@ -133,7 +133,7 @@
             // RipLabel
             // 
             RipLabel.AutoSize = true;
-            RipLabel.BackColor = Color.Red;
+            RipLabel.BackColor = Color.LightCoral;
             RipLabel.Font = new Font("Impact", 72F, FontStyle.Bold, GraphicsUnit.Point, 0);
             RipLabel.Location = new Point(291, 164);
             RipLabel.Name = "RipLabel";
