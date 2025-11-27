@@ -26,6 +26,9 @@
 
             new Setting();
 
+            // Enable KeyPreview so form receives keyboard events even when controls have focus
+            this.KeyPreview = true;
+
             SetInitialUIState();
         }
 
@@ -577,6 +580,14 @@
                 currentPlayerName = playerName;
 
                 PlayerNameTextBox.Enabled = false;
+
+                // Prevent the beep sound and consume the Enter key event
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                // Transfer focus to the form so keyboard input works for game controls
+                this.Focus();
+
                 RestartGame();
             }
         }
