@@ -271,16 +271,7 @@
 
         private void RestartGame()
         {
-            StopButton.Enabled = false;
-            StopButton.Visible = false;
-            RefreshButton.Enabled = false;
-            RefreshButton.Visible = false;
-            PlayerNameText.Visible = false;
-            PlayerNameText.Enabled = false;
-            PlayerNameTextBox.Visible = false;
-            PlayerNameTextBox.Enabled = false;
-            RipLabel.Visible = false;
-            RipLabel.Enabled = false;
+            SetGameUIState(gameRunning: true);
 
             maxWidth = picCanvas.Width / Setting.Width - 1;
             maxHeight = picCanvas.Height / Setting.Height - 1;
@@ -301,18 +292,8 @@
                 Snake.Add(body);
             }
 
-            // Spawn food at a free position
-            do
-            {
-                food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
-            } while (IsPositionOccupied(food.X, food.Y));
-
-            // Spawn powerup at a free position
-            do
-            {
-                powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
-            } while (IsPositionOccupied(powerup.X, powerup.Y));
-
+            SpawnFood();
+            SpawnPowerup();
             kill = null;
 
             GetCurrentPlayerHighscore(currentPlayerName);
@@ -337,65 +318,18 @@
                 Y = Snake[Snake.Count - 1].Y
             });
 
-            // Spawn food at a free position
-            do
-            {
-                food = new Circle
-                {
-                    X = rand.Next(2, maxWidth),
-                    Y = rand.Next(2, maxHeight)
-                };
-            } while (IsPositionOccupied(food.X, food.Y));
+            SpawnFood();
 
             // Spawn new powerup with 15% chance (only if none exists)
             if (powerup == null && rand.Next(0, 100) < 15)
             {
-                Circle newPowerup;
-                int maxDistance = -1;
-                Circle head = Snake[0];
-
-                for (int attempt = 0; attempt < 100; attempt++)
-                {
-                    int x = rand.Next(2, maxWidth);
-                    int y = rand.Next(2, maxHeight);
-                    newPowerup = new Circle { X = x, Y = y };
-
-                    if (IsPositionOccupied(x, y)) continue;
-
-                    int distance = Math.Abs(head.X - newPowerup.X) +
-                                   Math.Abs(head.Y - newPowerup.Y);
-
-                    if (distance > maxDistance)
-                    {
-                        maxDistance = distance;
-                        powerup = newPowerup;
-                    }
-                }
+                SpawnPowerup();
             }
 
             // Spawn new kill powerup with 10% chance (only if none exists)
             if (kill == null && rand.Next(0, 100) < 10)
             {
-                Circle newKill;
-                int maxDistance = -1;
-                Circle head = Snake[0];
-
-                for (int attempt = 0; attempt < 100; attempt++)
-                {
-                    int x = rand.Next(2, maxWidth);
-                    int y = rand.Next(2, maxHeight);
-                    newKill = new Circle { X = x, Y = y };
-
-                    if (IsPositionOccupied(x, y)) continue;
-
-                    int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
-
-                    if (distance > maxDistance)
-                    {
-                        maxDistance = distance;
-                        kill = newKill;
-                    }
-                }
+                SpawnKillPowerup();
             }
 
             // Update game speed and refresh canvas
@@ -418,29 +352,10 @@
             Setting.Speed = 100;
             gameTime.Interval = Setting.Speed;
 
+            // Spawn new powerup with 10% chance
             if (rand.Next(0, 100) < 10)
             {
-                Circle newPowerup;
-                int maxDistance = -1;
-                Circle head = Snake[0];
-
-                for (int attempt = 0; attempt < 100; attempt++)
-                {
-                    int x = rand.Next(2, maxWidth);
-                    int y = rand.Next(2, maxHeight);
-                    newPowerup = new Circle { X = x, Y = y };
-
-                    if (IsPositionOccupied(x, y)) continue;
-
-                    int distance = Math.Abs(head.X - newPowerup.X) +
-                                   Math.Abs(head.Y - newPowerup.Y);
-
-                    if (distance > maxDistance)
-                    {
-                        maxDistance = distance;
-                        powerup = newPowerup;
-                    }
-                }
+                SpawnPowerup();
             }
 
             picCanvas.Invalidate();
@@ -451,12 +366,7 @@
         {
             gameTime.Stop();
 
-            StopButton.Enabled = true;
-            StopButton.Visible = true;
-            RefreshButton.Enabled = true;
-            RefreshButton.Visible = true;
-            RipLabel.Visible = true;
-            RipLabel.Enabled = true;
+            SetGameUIState(gameRunning: false);
 
             DataBaseUpload(currentPlayerName);
 
@@ -495,6 +405,95 @@
             return false;
         }
 
+        private void SpawnFood()
+        {
+            do
+            {
+                food = new Circle
+                {
+                    X = rand.Next(2, maxWidth),
+                    Y = rand.Next(2, maxHeight)
+                };
+            } while (IsPositionOccupied(food.X, food.Y));
+        }
+
+        private void SpawnPowerup()
+        {
+            Circle newPowerup;
+            int maxDistance = -1;
+            Circle head = Snake[0];
+
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                int x = rand.Next(2, maxWidth);
+                int y = rand.Next(2, maxHeight);
+                newPowerup = new Circle { X = x, Y = y };
+
+                if (IsPositionOccupied(x, y)) continue;
+
+                int distance = Math.Abs(head.X - newPowerup.X) +
+                               Math.Abs(head.Y - newPowerup.Y);
+
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    powerup = newPowerup;
+                }
+            }
+        }
+
+        private void SpawnKillPowerup()
+        {
+            Circle newKill;
+            int maxDistance = -1;
+            Circle head = Snake[0];
+
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                int x = rand.Next(2, maxWidth);
+                int y = rand.Next(2, maxHeight);
+                newKill = new Circle { X = x, Y = y };
+
+                if (IsPositionOccupied(x, y)) continue;
+
+                int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
+
+                if (distance > maxDistance)
+                {
+                    maxDistance = distance;
+                    kill = newKill;
+                }
+            }
+        }
+
+        private void SetGameUIState(bool gameRunning)
+        {
+            if (gameRunning)
+            {
+                // Game is running - hide all UI except stop button
+                StopButton.Enabled = true;
+                StopButton.Visible = true;
+                RefreshButton.Enabled = false;
+                RefreshButton.Visible = false;
+                PlayerNameText.Visible = false;
+                PlayerNameText.Enabled = false;
+                PlayerNameTextBox.Visible = false;
+                PlayerNameTextBox.Enabled = false;
+                RipLabel.Visible = false;
+                RipLabel.Enabled = false;
+            }
+            else
+            {
+                // Game is over - show restart options
+                StopButton.Enabled = true;
+                StopButton.Visible = true;
+                RefreshButton.Enabled = true;
+                RefreshButton.Visible = true;
+                RipLabel.Visible = true;
+                RipLabel.Enabled = true;
+            }
+        }
+
         private void StopGame(object sender, EventArgs e)
         {
             Application.Exit();
@@ -502,16 +501,7 @@
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
-            StopButton.Enabled = false;
-            StopButton.Visible = false;
-            RefreshButton.Enabled = false;
-            RefreshButton.Visible = false;
-            PlayerNameTextBox.Enabled = false;
-            PlayerNameTextBox.Visible = false;
-            PlayerNameText.Enabled = false;
-            PlayerNameText.Visible = false;
             RestartGame();
-
             txtHighScore.ForeColor = Color.Black;
         }
 
@@ -542,16 +532,8 @@
 
                 db.SaveChanges();
 
-                //UI
+                // Clear player name textbox after successful submission
                 PlayerNameTextBox.Clear();
-                StopButton.Enabled = true;
-                StopButton.Visible = true;
-                RefreshButton.Enabled = true;
-                RefreshButton.Visible = true;
-                PlayerNameTextBox.Enabled = false;
-                PlayerNameTextBox.Visible = false;
-                PlayerNameText.Enabled = false;
-                PlayerNameText.Visible = false;
                 txtHighScore.ForeColor = Color.Black;
             }
             catch (Exception ex)
