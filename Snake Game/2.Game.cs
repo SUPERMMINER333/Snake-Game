@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Windows.Forms;
-
-namespace Snake_Game
+﻿namespace Snake_Game
 {
     public partial class Game : Form
     {

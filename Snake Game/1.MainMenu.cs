@@ -1,5 +1,3 @@
-using Snake_Game.Models;
-
 namespace Snake_Game
 {
     public partial class MainMenu : Form

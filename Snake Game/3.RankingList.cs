@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Snake_Game
 {
@@ -22,39 +17,39 @@ namespace Snake_Game
         private async Task LoadRankingList()
         {
             ListViewRanking.Items.Clear();
-            
-                // Initialize database context
-                using var db = new Models.SnakeGameContext();
-                if (!db.Database.CanConnect())
-                {
-                    var li = new ListViewItem(new[] { "-", "No connection to the database.", "-" });
-                    ListViewRanking.Items.Add(li);
-                    AdjustColumnWidths();
-                    return;
-                }
+
+            // Initialize database context
+            using var db = new Models.SnakeGameContext();
+            if (!db.Database.CanConnect())
+            {
+                var li = new ListViewItem(new[] { "-", "No connection to the database.", "-" });
+                ListViewRanking.Items.Add(li);
+                AdjustColumnWidths();
+                return;
+            }
 
             // Retrieve top 100 scores ordered by score descending
             var rankings = await db.SnakeGames
                              .OrderByDescending(s => s.Score)
                              .ToListAsync();
 
-                // Initialize rank counter
-                int rank = 1;
+            // Initialize rank counter
+            int rank = 1;
 
-                // Populate ListView with ranking data
-                foreach (var game in rankings)
-                {
-                    var player = string.IsNullOrWhiteSpace(game.PlayerName) ? "Unknown" : game.PlayerName;
-                    var scoreText = (game.Score.HasValue) ? game.Score.Value.ToString() : "0";
+            // Populate ListView with ranking data
+            foreach (var game in rankings)
+            {
+                var player = string.IsNullOrWhiteSpace(game.PlayerName) ? "Unknown" : game.PlayerName;
+                var scoreText = (game.Score.HasValue) ? game.Score.Value.ToString() : "0";
 
-                    var item = new ListViewItem(rank.ToString());
-                    item.SubItems.Add(player);
-                    item.SubItems.Add(scoreText);
+                var item = new ListViewItem(rank.ToString());
+                item.SubItems.Add(player);
+                item.SubItems.Add(scoreText);
 
-                    ListViewRanking.Items.Add(item);
-                    rank++;
-                }
-                AdjustColumnWidths();
+                ListViewRanking.Items.Add(item);
+                rank++;
+            }
+            AdjustColumnWidths();
         }
 
         private void AdjustColumnWidths()
