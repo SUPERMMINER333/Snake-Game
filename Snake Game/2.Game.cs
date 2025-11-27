@@ -35,16 +35,7 @@ namespace Snake_Game
 
             new Setting();
 
-            StopButton.Enabled = true;
-            StopButton.Visible = true;
-            RefreshButton.Enabled = false;
-            RefreshButton.Visible = false;
-            PlayerNameText.Visible = true;
-            PlayerNameText.Enabled = true;
-            PlayerNameTextBox.Visible = true;
-            PlayerNameTextBox.Enabled = true;
-            RipLabel.Visible = false;
-            RipLabel.Enabled = false;
+            SetInitialUIState();
         }
 
         private void KeyIsDown(object sender, KeyEventArgs e)
@@ -473,6 +464,21 @@ namespace Snake_Game
                     kill = newKill;
                 }
             }
+        }
+
+        private void SetInitialUIState()
+        {
+            // Initial state - waiting for player name
+            StopButton.Enabled = true;
+            StopButton.Visible = true;
+            RefreshButton.Enabled = false;
+            RefreshButton.Visible = false;
+            PlayerNameText.Visible = true;
+            PlayerNameText.Enabled = true;
+            PlayerNameTextBox.Visible = true;
+            PlayerNameTextBox.Enabled = true;
+            RipLabel.Visible = false;
+            RipLabel.Enabled = false;
         }
 
         private void SetGameUIState(bool gameRunning)
