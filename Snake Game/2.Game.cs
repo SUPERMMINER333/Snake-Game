@@ -375,10 +375,8 @@ namespace Snake_Game
                 picCanvas.Invalidate();
             }
 
-            // Spawn new kill powerup with 10% chance
-            kill = null;
-
-            if (rand.Next(0, 100) < 10)
+            // Spawn new kill powerup with 10% chance (only if none exists)
+            if (kill == null && rand.Next(0, 100) < 10)
             {
                 Circle newKill;
                 int maxDistance = -1;
@@ -410,8 +408,6 @@ namespace Snake_Game
                     }
                 }
                 picCanvas.Invalidate();
-
-                Die();
             }
             Console.WriteLine(rand.Next(0, 100).ToString());
         }
