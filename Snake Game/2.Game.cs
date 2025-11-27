@@ -310,8 +310,19 @@ namespace Snake_Game
                 Snake.Add(body);
             }
 
-            food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
-            powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            // Spawn food at a free position
+            do
+            {
+                food = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            } while (IsPositionOccupied(food.X, food.Y));
+
+            // Spawn powerup at a free position
+            do
+            {
+                powerup = new Circle { X = rand.Next(2, maxWidth), Y = rand.Next(2, maxHeight) };
+            } while (IsPositionOccupied(powerup.X, powerup.Y));
+
+            kill = null;
 
             GetCurrentPlayerHighscore(currentPlayerName);
 
@@ -335,15 +346,18 @@ namespace Snake_Game
                 Y = Snake[Snake.Count - 1].Y
             });
 
-            food = new Circle
+            // Spawn food at a free position
+            do
             {
-                X = rand.Next(2, maxWidth),
-                Y = rand.Next(2, maxHeight)
-            };
+                food = new Circle
+                {
+                    X = rand.Next(2, maxWidth),
+                    Y = rand.Next(2, maxHeight)
+                };
+            } while (IsPositionOccupied(food.X, food.Y));
 
-            // Spawn new powerup with 15% chance
-            powerup = null;
-            if (rand.Next(0, 100) < 15)
+            // Spawn new powerup with 15% chance (only if none exists)
+            if (powerup == null && rand.Next(0, 100) < 15)
             {
                 Circle newPowerup;
                 int maxDistance = -1;
@@ -355,12 +369,7 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newPowerup = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
-                    foreach (var segment in Snake)
-                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
-                            onSnake = true;
-
-                    if (onSnake) continue;
+                    if (IsPositionOccupied(x, y)) continue;
 
                     int distance = Math.Abs(head.X - newPowerup.X) +
                                    Math.Abs(head.Y - newPowerup.Y);
@@ -371,8 +380,6 @@ namespace Snake_Game
                         powerup = newPowerup;
                     }
                 }
-                gameTime.Interval = Setting.Speed;
-                picCanvas.Invalidate();
             }
 
             // Spawn new kill powerup with 10% chance (only if none exists)
@@ -388,16 +395,7 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newKill = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
-                    foreach (var segment in Snake)
-                    {
-                        if (segment.X == newKill.X && segment.Y == newKill.Y)
-                        {
-                            onSnake = true;
-                            break;
-                        }
-                    }
-                    if (onSnake) continue;
+                    if (IsPositionOccupied(x, y)) continue;
 
                     int distance = Math.Abs(head.X - newKill.X) + Math.Abs(head.Y - newKill.Y);
 
@@ -407,8 +405,11 @@ namespace Snake_Game
                         kill = newKill;
                     }
                 }
-                picCanvas.Invalidate();
             }
+
+            // Update game speed and refresh canvas
+            gameTime.Interval = Setting.Speed;
+            picCanvas.Invalidate();
             Console.WriteLine(rand.Next(0, 100).ToString());
         }
 
@@ -438,12 +439,7 @@ namespace Snake_Game
                     int y = rand.Next(2, maxHeight);
                     newPowerup = new Circle { X = x, Y = y };
 
-                    bool onSnake = false;
-                    foreach (var segment in Snake)
-                        if (segment.X == newPowerup.X && segment.Y == newPowerup.Y)
-                            onSnake = true;
-
-                    if (onSnake) continue;
+                    if (IsPositionOccupied(x, y)) continue;
 
                     int distance = Math.Abs(head.X - newPowerup.X) +
                                    Math.Abs(head.Y - newPowerup.Y);
@@ -482,6 +478,30 @@ namespace Snake_Game
 
             picCanvas.BackColor = Color.Red;
             picCanvas.Invalidate();
+        }
+
+        private bool IsPositionOccupied(int x, int y)
+        {
+            // Check if position is on snake
+            foreach (var segment in Snake)
+            {
+                if (segment.X == x && segment.Y == y)
+                    return true;
+            }
+
+            // Check if position is on food
+            if (food != null && food.X == x && food.Y == y)
+                return true;
+
+            // Check if position is on powerup
+            if (powerup != null && powerup.X == x && powerup.Y == y)
+                return true;
+
+            // Check if position is on kill powerup
+            if (kill != null && kill.X == x && kill.Y == y)
+                return true;
+
+            return false;
         }
 
         private void StopGame(object sender, EventArgs e)
