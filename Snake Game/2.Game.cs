@@ -111,6 +111,7 @@
 
         private void GameTimer(object sender, EventArgs e)
         {
+            Console.WriteLine($"DEBUG: GameTimer tick - direction={Setting.direction}, goLeft={goLeft}, goRight={goRight}, goUp={goUp}, goDown={goDown}");
             if (goLeft)
             {
                 Setting.direction = "left";
@@ -265,10 +266,32 @@
 
         private void RestartGame()
         {
+            Console.WriteLine("DEBUG: RestartGame() - Starting");
+
+            // Stop timer if it's running
+            gameTime.Stop();
+
+            // Reset all movement flags
+            goLeft = false;
+            goRight = false;
+            goUp = false;
+            goDown = false;
+
+            // Reset direction to default
+            Setting.direction = "right";
+            Setting.Speed = 100;
+
             SetGameUIState(gameRunning: true);
 
             maxWidth = picCanvas.Width / Setting.Width - 1;
             maxHeight = picCanvas.Height / Setting.Height - 1;
+            Console.WriteLine($"DEBUG: Canvas size: {picCanvas.Width}x{picCanvas.Height}, maxWidth={maxWidth}, maxHeight={maxHeight}");
+
+            // Validate canvas dimensions
+            if (maxWidth < 20 || maxHeight < 20)
+            {
+                throw new InvalidOperationException($"Canvas too small: maxWidth={maxWidth}, maxHeight={maxHeight}. Canvas size: {picCanvas.Width}x{picCanvas.Height}");
+            }
 
             Snake.Clear();
 
@@ -286,14 +309,23 @@
                 Snake.Add(body);
             }
 
+            Console.WriteLine("DEBUG: About to spawn food");
             SpawnFood();
+            Console.WriteLine("DEBUG: About to spawn powerup");
             SpawnPowerup();
             kill = null;
 
+            Console.WriteLine("DEBUG: About to get player highscore");
             GetCurrentPlayerHighscore(currentPlayerName);
 
+            Console.WriteLine($"DEBUG: Setting timer interval to {Setting.Speed} and starting");
             gameTime.Interval = Setting.Speed;
             gameTime.Start();
+            Console.WriteLine($"DEBUG: Timer started. Enabled={gameTime.Enabled}");
+
+            // Force canvas redraw
+            picCanvas.Invalidate();
+            picCanvas.Update();
         }
 
         private void EatFood()
@@ -401,6 +433,12 @@
 
         private void SpawnFood()
         {
+            if (maxWidth < 2 || maxHeight < 2)
+            {
+                Console.WriteLine($"ERROR: Cannot spawn food - invalid dimensions: maxWidth={maxWidth}, maxHeight={maxHeight}");
+                throw new InvalidOperationException($"Cannot spawn food - invalid dimensions: maxWidth={maxWidth}, maxHeight={maxHeight}");
+            }
+
             do
             {
                 food = new Circle
@@ -413,6 +451,13 @@
 
         private void SpawnPowerup()
         {
+            if (maxWidth < 2 || maxHeight < 2)
+            {
+                Console.WriteLine($"ERROR: Cannot spawn powerup - invalid dimensions: maxWidth={maxWidth}, maxHeight={maxHeight}");
+                powerup = null;
+                return;
+            }
+
             Circle newPowerup;
             int maxDistance = -1;
             Circle head = Snake[0];
@@ -565,6 +610,7 @@
         {
             if (e.KeyCode == Keys.Enter)
             {
+                Console.WriteLine("DEBUG: Enter key pressed");
                 var playerName = PlayerNameTextBox.Text.Trim();
                 if (string.IsNullOrWhiteSpace(playerName))
                 {
@@ -578,6 +624,7 @@
                 }
 
                 currentPlayerName = playerName;
+                Console.WriteLine($"DEBUG: Player name set to: {currentPlayerName}");
 
                 PlayerNameTextBox.Enabled = false;
 
@@ -588,7 +635,18 @@
                 // Transfer focus to the form so keyboard input works for game controls
                 this.Focus();
 
-                RestartGame();
+                Console.WriteLine("DEBUG: About to call RestartGame()");
+                try
+                {
+                    RestartGame();
+                    Console.WriteLine("DEBUG: RestartGame() completed successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"DEBUG: RestartGame() failed with error: {ex.Message}");
+                    Console.WriteLine($"DEBUG: Stack trace: {ex.StackTrace}");
+                    MessageBox.Show($"Failed to start game: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
