@@ -10,7 +10,6 @@ A modern, feature-rich implementation of the classic Snake game built with .NET 
 ## 📋 Table of Contents
 
 - [Features](#-features)
-- [Screenshots](#-screenshots)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
 - [Database Setup](#-database-setup)
@@ -19,8 +18,6 @@ A modern, feature-rich implementation of the classic Snake game built with .NET 
 - [Configuration](#-configuration)
 - [Project Structure](#-project-structure)
 - [Technologies Used](#-technologies-used)
-- [Contributing](#-contributing)
-- [License](#-license)
 
 ## ✨ Features
 
