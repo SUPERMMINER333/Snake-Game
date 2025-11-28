@@ -15,12 +15,12 @@ A modern, feature-rich implementation of the classic Snake game built with .NET 
   - [Technical Features](#-technical-features)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
-- [Database Setup](#-database-setup)
+- [Database Setup](#database-setup)
 - [How to Play](#-how-to-play)
 - [Building from Source](#-building-from-source)
-- [Configuration](#-configuration)
+- [Configuration](#configuration)
 - [Project Structure](#-project-structure)
-- [Technologies Used](#-technologies-used)
+- [Technologies Used](#technologies-used)
 - [Contact](#-contact)
 
 ## ✨ Features
