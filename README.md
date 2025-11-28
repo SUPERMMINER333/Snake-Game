@@ -5,7 +5,6 @@ A modern, feature-rich implementation of the classic Snake game built with .NET 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Windows Forms](https://img.shields.io/badge/Windows%20Forms-blue?logo=windows)](https://docs.microsoft.com/en-us/dotnet/desktop/winforms/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## 📋 Table of Contents
 
