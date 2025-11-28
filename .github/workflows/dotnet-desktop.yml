@@ -1,0 +1,147 @@
+name: .NET Windows Forms Build and Publish
+
+# Workflow wird bei Push auf main/master und bei Pull Requests ausgelöst
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Ermöglicht manuelles Ausführen des Workflows
+
+# Umgebungsvariablen für das gesamte Workflow
+env:
+  DOTNET_VERSION: '10.0.x'  # .NET 10.0 (Preview/RC - anpassen falls nötig)
+  PROJECT_PATH: 'Snake Game/Snake Game.csproj'
+  CONFIGURATION: 'Release'
+  OUTPUT_PATH: './publish'
+
+jobs:
+  build-and-publish:
+    name: Build und Publish Windows Forms App
+    runs-on: windows-latest  # Windows Runner für WinForms-Anwendung
+
+    steps:
+      # 1. Repository auschecken
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Vollständige Git-Historie für bessere Build-Informationen
+
+      # 2. .NET SDK installieren
+      - name: Setup .NET SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          # Falls .NET 10 noch Preview ist, ggf. 'include-prerelease: true' aktivieren
+          # include-prerelease: true
+
+      # 3. NuGet-Pakete wiederherstellen mit Caching
+      - name: Cache NuGet Packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Dependencies
+        run: dotnet restore "${{ env.PROJECT_PATH }}"
+
+      # 4. Projekt bauen
+      - name: Build Project
+        run: |
+          dotnet build "${{ env.PROJECT_PATH }}" `
+            --configuration ${{ env.CONFIGURATION }} `
+            --no-restore `
+            --verbosity normal
+
+      # 5. Tests ausführen (falls vorhanden)
+      # Hinweis: Aktuell keine Test-Projekte im Repository erkannt
+      # - name: Run Tests
+      #   run: dotnet test --no-build --configuration ${{ env.CONFIGURATION }} --verbosity normal
+
+      # 6. Anwendung für Deployment publishen
+      - name: Publish Application
+        run: |
+          dotnet publish "${{ env.PROJECT_PATH }}" `
+            --configuration ${{ env.CONFIGURATION }} `
+            --output ${{ env.OUTPUT_PATH }} `
+            --no-build `
+            --self-contained false `
+            -p:PublishSingleFile=false `
+            -p:PublishReadyToRun=false
+
+      # 7. (Optional) Code-Signing für Windows Desktop App
+      # Benötigt: Certificate als GitHub Secret (BASE64_ENCODED_PFX, PFX_PASSWORD)
+      - name: Sign Application (Optional)
+        if: false  # Auf 'true' setzen, wenn Code-Signing aktiviert werden soll
+        shell: pwsh
+        run: |
+          # Certificate aus Secret dekodieren und speichern
+          $certPath = Join-Path $env:RUNNER_TEMP "cert.pfx"
+          [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}") | Set-Content $certPath -AsByteStream
+
+          # Alle ausführbaren Dateien signieren
+          $filesToSign = Get-ChildItem -Path "${{ env.OUTPUT_PATH }}" -Filter "*.exe" -Recurse
+
+          foreach ($file in $filesToSign) {
+            & "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64\signtool.exe" sign `
+              /f $certPath `
+              /p "${{ secrets.PFX_PASSWORD }}" `
+              /tr http://timestamp.digicert.com `
+              /td sha256 `
+              /fd sha256 `
+              $file.FullName
+
+            Write-Host "Signiert: $($file.Name)"
+          }
+
+          # Temporäres Zertifikat löschen
+          Remove-Item $certPath
+
+      # 8. Build-Artefakte hochladen
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Snake-Game-${{ env.CONFIGURATION }}-${{ github.sha }}
+          path: ${{ env.OUTPUT_PATH }}
+          retention-days: 30  # Artefakte 30 Tage aufbewahren
+          if-no-files-found: error
+
+      # 9. (Optional) Release erstellen bei Tags
+      # Wird ausgeführt, wenn ein Git-Tag gepusht wird (z.B. v1.0.0)
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.OUTPUT_PATH }}/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # (Optional) Separater Job für Code-Qualitätsprüfung
+  code-quality:
+    name: Code-Qualität prüfen
+    runs-on: windows-latest
+    if: false  # Auf 'true' setzen, um Code-Quality-Checks zu aktivieren
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Code-Analyse mit .NET Analyzers
+      - name: Run Code Analysis
+        run: |
+          dotnet restore "${{ env.PROJECT_PATH }}"
+          dotnet build "${{ env.PROJECT_PATH }}" `
+            --configuration Debug `
+            --no-restore `
+            -p:EnableNETAnalyzers=true `
+            -p:AnalysisLevel=latest `
+            -p:TreatWarningsAsErrors=false
