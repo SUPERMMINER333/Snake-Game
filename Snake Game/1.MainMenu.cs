@@ -6,8 +6,10 @@ namespace Snake_Game
     {
         public MainMenu()
         {
+            // Initialize the main menu components
             InitializeComponent();
 
+            // Check database connection
             using var db = new Models.SnakeGameContext();
             if (!db.Database.CanConnect())
             {
@@ -18,6 +20,7 @@ namespace Snake_Game
 
         private void StartButton_Click(object sender, EventArgs e)
         {
+            // Start a new game
             Game Game = new Game();
             Game.Show();
             this.Hide();
@@ -25,11 +28,13 @@ namespace Snake_Game
 
         private void StopButton_Click(object sender, EventArgs e)
         {
+            // Exit the application
             Application.Exit();
         }
 
         private void StatsButton_Click(object sender, EventArgs e)
         {
+            // Show the ranking list
             RankingList RankingList = new RankingList();
             RankingList.Show();
             this.Hide();

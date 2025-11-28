@@ -6,6 +6,7 @@ namespace Snake_Game
 {
     internal class Setting
     {
+        // Static properties to hold game settings
         public static int Width { get; set; }
         public static int Height { get; set; }
         public static string? direction { get; set; }
@@ -14,6 +15,7 @@ namespace Snake_Game
 
         public Setting()
         {
+            // Initialize default settings
             Width = 16;
             Height = 16;
             direction = "right";

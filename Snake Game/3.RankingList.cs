@@ -11,7 +11,9 @@ namespace Snake_Game
     {
         public RankingList()
         {
+            // Initialize the Ranking list components
             InitializeComponent();
+
             // Adjust columns when the form is resized
             this.Resize += (s, e) => AdjustColumnWidths();
             LoadRankingList();
@@ -21,40 +23,45 @@ namespace Snake_Game
         // Load ranking data from the database
         private async Task LoadRankingList()
         {
+            // Clear existing items
             ListViewRanking.Items.Clear();
-            
-                // Initialize database context
-                using var db = new Models.SnakeGameContext();
-                if (!db.Database.CanConnect())
-                {
-                    var li = new ListViewItem(new[] { "-", "No connection to the database.", "-" });
-                    ListViewRanking.Items.Add(li);
-                    AdjustColumnWidths();
-                    return;
-                }
+
+            // Initialize database context
+            using var db = new Models.SnakeGameContext();
+            if (!db.Database.CanConnect())
+            {
+                var li = new ListViewItem(new[] { "-", "No connection to the database.", "-" });
+                ListViewRanking.Items.Add(li);
+                AdjustColumnWidths();
+                return;
+            }
 
             // Retrieve top 100 scores ordered by score descending
             var rankings = await db.SnakeGames
                              .OrderByDescending(s => s.Score)
                              .ToListAsync();
 
-                // Initialize rank counter
-                int rank = 1;
+            // Initialize rank counter
+            int rank = 1;
 
-                // Populate ListView with ranking data
-                foreach (var game in rankings)
-                {
-                    var player = string.IsNullOrWhiteSpace(game.PlayerName) ? "Unknown" : game.PlayerName;
-                    var scoreText = (game.Score.HasValue) ? game.Score.Value.ToString() : "0";
+            foreach (var game in rankings)
+            {
+                // Safeguard against null or empty player names and scores
+                var player = string.IsNullOrWhiteSpace(game.PlayerName) ? "Unknown" : game.PlayerName;
+                var scoreText = (game.Score.HasValue) ? game.Score.Value.ToString() : "0";
 
-                    var item = new ListViewItem(rank.ToString());
-                    item.SubItems.Add(player);
-                    item.SubItems.Add(scoreText);
+                // Create ListView item
+                var item = new ListViewItem(rank.ToString());
+                item.SubItems.Add(player);
+                item.SubItems.Add(scoreText);
 
-                    ListViewRanking.Items.Add(item);
-                    rank++;
-                }
-                AdjustColumnWidths();
+                // Add item to ListView
+                ListViewRanking.Items.Add(item);
+                rank++;
+            }
+
+            // Adjust column widths after loading data
+            AdjustColumnWidths();
         }
 
         private void AdjustColumnWidths()
@@ -68,8 +75,7 @@ namespace Snake_Game
             // Get current column widths
             int rankWidth = Math.Max(80, colRank.Width);
             int scoreWidth = Math.Max(80, colScore.Width);
-
-            int nameWidth = clientWidth - rankWidth - scoreWidth - 4; // small padding
+            int nameWidth = clientWidth - rankWidth - scoreWidth - 4;
 
             // Adjust for scrollbar if needed
             if (ListViewRanking.Items.Count > ListViewRanking.ClientSize.Height / (int)Math.Max(1, ListViewRanking.Font.Height))
@@ -80,14 +86,15 @@ namespace Snake_Game
             // Ensure name column has a minimum width
             if (nameWidth < 50) nameWidth = 50;
 
+            // Set new column widths
             colRank.Width = rankWidth;
             colName.Width = nameWidth;
             colScore.Width = scoreWidth;
         }
 
-        // Handle Stop button click
         private void StopButton_Click(object sender, EventArgs e)
         {
+            // Navigate back to the main menu
             MainMenu mainMenu = new MainMenu();
             mainMenu.Show();
             this.Close();
