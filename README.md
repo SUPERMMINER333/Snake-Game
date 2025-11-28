@@ -9,19 +9,19 @@ A modern, feature-rich implementation of the classic Snake game built with .NET 
 
 ## 📋 Table of Contents
 
-- [Features](#features)
-  - [Gameplay](#gameplay)
-  - [Competitive Features](#competitive-features)
-  - [Technical Features](#technical-features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Database Setup](#database-setup)
-- [How to Play](#how-to-play)
-- [Building from Source](#building-from-source)
-- [Configuration](#configuration)
-- [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Contact](#contact)
+- [Features](#-features)
+  - [Gameplay](#-gameplay)
+  - [Competitive Features](#-competitive-features)
+  - [Technical Features](#-technical-features)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Database Setup](#-database-setup)
+- [How to Play](#-how-to-play)
+- [Building from Source](#-building-from-source)
+- [Configuration](#-configuration)
+- [Project Structure](#-project-structure)
+- [Technologies Used](#-technologies-used)
+- [Contact](#-contact)
 
 ## ✨ Features
 
